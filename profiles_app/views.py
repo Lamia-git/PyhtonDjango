@@ -1,9 +1,15 @@
+from django.db.models.query import QuerySet
 from django.shortcuts import render
+from rest_framework import authentication
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, viewsets
-from profiles_app import serializers
+from rest_framework.authentication import TokenAuthentication
 
+from profiles_app import persmissions
+from profiles_app import serializers
+from profiles_app import models
 
 # Create your views here.
 
@@ -96,6 +102,14 @@ class HelloViewSet(viewsets.ViewSet):
         return Response({'http_methode':'DELETE'})
 
 
+class userProfileViewSet(viewsets.ModelViewSet):
+    """Handle creating and updating profiles"""
+    serializer_class = serializers.UserProfilesSerializer
+    queryset = models.UserProfile.objects.all()
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (persmissions.UpdateOwnProfile,)
+
+    
 
 
 
